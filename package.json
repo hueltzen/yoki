@@ -1,0 +1,37 @@
+{
+  "name": "@ueltzen/yoki",
+  "version": "0.0.1",
+  "description": "A rust inspired maybe and result library.",
+  "keywords": [],
+  "homepage": "https://github.com/hueltzen/yoki",
+  "main": "dist/index.js",
+  "bugs": {
+    "url": "https://github.com/hueltzen/yoki/issues"
+  },
+  "author": "Hendrik Ueltzen <h@ueltzen.me>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hueltzen/yoki.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "license": "NON-AI-MIT",
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.16.4",
+    "@changesets/cli": "^2.27.9",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "ci": "bun run build && bun run prettier:check && bun run check-exports",
+    "prettier:check": "prettier --check .",
+    "prettier:format": "prettier --write .",
+    "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
+    "local-release": "changeset version && changeset publish",
+    "prepublish-only": "bun run ci",
+    "test": "bun test --watch --coverage"
+  }
+}
