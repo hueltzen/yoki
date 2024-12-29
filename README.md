@@ -19,7 +19,7 @@ use-cases.
 
 ## Documentation
 
-Check out the [docs](https://github.com/hueltzen/yoki/blob/master/docs/index.md).
+Check out the [docs](https://github.com/hueltzen/yoki/blob/main/docs/index.md).
 
 ## Installation
 
