@@ -47,9 +47,10 @@ function divide(a: number, b: number): Maybe<number> {
 You can then use it as follows:
 
 ```typescript
-const result = divide(parseInt(first), parseInt(second))
-  .mapOr("Invalid Input", (v) => `The result is: ${v}`)
-
+const result = divide(parseInt(first), parseInt(second)).mapOr(
+  "Invalid Input",
+  (v) => `The result is: ${v}`,
+)
 ```
 
 ### Result
@@ -73,8 +74,10 @@ function divide(a: number, b: number): Result<number, string> {
 You can then use the provided error messages later in your code execution:
 
 ```typescript
-const result = divide(parseInt(first), parseInt(second))
-  .mapOrElse((err) => err, (v) => `The result is: ${v}`)
+const result = divide(parseInt(first), parseInt(second)).mapOrElse(
+  (err) => err,
+  (v) => `The result is: ${v}`,
+)
 ```
 
 ## Contributing
