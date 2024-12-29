@@ -26,7 +26,7 @@ Check out the [docs](https://github.com/hueltzen/yoki/blob/main/docs/index.md).
 To add yōki to your project simply install it like any other npm package for
 example by running (for npm):
 
-```
+```bash
 npm i @ueltzen/yoki
 ```
 
