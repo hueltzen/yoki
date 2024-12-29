@@ -20,7 +20,62 @@ Check out the [docs](https://github.com/hueltzen/yoki/blob/master/docs/index.md)
 
 ## Installation
 
-coming soon...
+To add yōki to your project simply install it like any other npm package for
+example by running (for npm):
+
+```
+npm i @ueltzen/yoki
+```
+
+## Basic usage
+
+### Maybe
+
+You can create a `Maybe` by using one of the two functions supplied by yōki;
+`Some` and `None`:
+
+```typescript
+function divide(a: number, b: number): Maybe<number> {
+  if (Number.isNaN(a) || Number.isNaN(b) || b === 0) {
+    return None()
+  }
+
+  return Some(a / b)
+}
+```
+
+You can then use it as follows:
+
+```typescript
+const result = divide(parseInt(first), parseInt(second))
+  .mapOr("Invalid Input", (v) => `The result is: ${v}`)
+
+```
+
+### Result
+
+Similarly you can create a `Result` by using `Ok` and `Err`. This way you can
+provide more context to your code for more granular error handling:
+
+```typescript
+function divide(a: number, b: number): Result<number, string> {
+  if (Number.isNaN(a) || Number.isNaN(b)) {
+    return Err("One of the supplied values is not a number.")
+  }
+  if (b === 0) {
+    return Err("Can't divide by zero.")
+  }
+
+  return Ok(a / b)
+}
+```
+
+You can then use the provided error messages later in your code execution:
+
+```typescript
+const result = divide(parseInt(first), parseInt(second))
+  .mapOrElse((err) => err, (v) => `The result is: ${v}`)
+```
 
 ## Contributing
 
