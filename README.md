@@ -2,6 +2,7 @@
 
 A rust inspired maybe and result library.
 
+[![Build Status](https://github.com/ramda/ramda/workflows/Build/badge.svg)](https://github.com/hueltzen/yoki/actions?query=workflow%3Abuild)
 [![npm version](https://badge.fury.io/js/@ueltzen%2Fyoki.svg)](https://badge.fury.io/js/@ueltzen%2Fyoki)
 
 ## Introduction
