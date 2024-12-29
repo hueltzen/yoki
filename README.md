@@ -2,6 +2,8 @@
 
 A rust inspired maybe and result library.
 
+[![npm version](https://badge.fury.io/js/@ueltzen%2Fyoki.svg)](https://badge.fury.io/js/@ueltzen%2Fyoki)
+
 ## Introduction
 
 The `Maybe` type represents an
