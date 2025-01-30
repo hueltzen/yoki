@@ -1,4 +1,7 @@
+import type { MatchError } from "../core/errors/MatchError.js"
+import type { UnwrapError } from "../core/errors/UnwrapError.js"
 import type { Maybe } from "./maybe.js"
+import type { ResultMatchPredicate } from "./shared.js"
 
 /**
  * The Result type.
@@ -20,30 +23,37 @@ export type Result<T, E> = {
   isErr: () => boolean
 
   /**
-   * Returns true if the {@link Result} is {@link Ok} and the value inside of it matches the predicate.
+   * Returns true if the {@link Result} is {@link Ok} and the value inside of it
+   * matches the predicate.
    *
-   * @return {boolean} Returns whether or not the Result is Ok and the value matches the predicate
+   * @return {boolean} Returns whether or not the Result is Ok and the value
+   * matches the predicate
    */
   isOkAnd: (predicateFn: (v: T) => boolean) => boolean
 
   /**
-   * Returns true if the {@link Result} is {@link Err} and the value inside of it matches the predicate.
+   * Returns true if the {@link Result} is {@link Err} and the value inside of
+   * it matches the predicate.
    *
-   * @return {boolean} Returns whether or not the Result is Err and the value matches the predicate
+   * @return {boolean} Returns whether or not the Result is Err and the value
+   * matches the predicate
    */
   isErrAnd: (predicateFn: (err: E) => boolean) => boolean
 
   /**
-   * Returns the contained value. Throws an {@link UnwrapError} with a generic
-   * message if called on an {@link Err}.
+   * Returns the contained value.
+   *
+   * @throws {UnwrapError} with a generic message if called on an {@link Err}
    *
    * @return {T} The contained value
    */
   unwrap: () => T
 
   /**
-   * Returns the contained value. Throws an {@link UnwrapError} with the
-   * supplied custom `message` if called on an {@link Err}.
+   * Returns the contained value.
+   *
+   * @throws {UnwrapError} with the supplied custom `message` if called on an
+   * {@link Err}
    *
    * @param {string} message - A custom message to be used for the
    * `UnwrapError`
@@ -161,4 +171,18 @@ export type Result<T, E> = {
    * @return {Maybe<E>} A Maybe of the Err; or a None if Some
    */
   err(): Maybe<E>
+
+  /**
+   * Returns the value associated with the first ResultMatchPredicate<T, U, E>
+   * to match the Result.
+   *
+   * @throws {MatchError} if no match arms are provided or if no match arm is
+   * matching the Result
+   *
+   * @param {ResultMatchPredicate<T, U, E>} args - The predicates to match on
+   * the Result
+   *
+   * @returns The value associated with the first matching predicate
+   */
+  match: <U>(args: [ResultMatchPredicate<T, U, E>, U][]) => U
 }

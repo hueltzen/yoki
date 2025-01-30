@@ -2,6 +2,12 @@ import type { Maybe } from "../types/maybe.js"
 import type { Result } from "../types/result.js"
 import { Some } from "./some.js"
 import { None } from "./none.js"
+import type { ResultMatchPredicate } from "../types/shared.js"
+import {
+  isMaybeMatchPredicateFn,
+  isResultMatchPredicateFn,
+} from "../utils/utils.js"
+import { MatchError } from "./errors/MatchError.js"
 
 export function Ok<T, E>(value: T): Result<T, E> {
   function isOk(): boolean {
@@ -59,6 +65,32 @@ export function Ok<T, E>(value: T): Result<T, E> {
     return None<E>()
   }
 
+  function match<U>(args: [ResultMatchPredicate<T, U, E>, U][]): U {
+    if (args !== undefined && args.length > 0) {
+      const result: [ResultMatchPredicate<T, U, E>, U] | undefined = args.find(
+        ([predicate, _]: [ResultMatchPredicate<T, U, E>, U]): boolean => {
+          if (isResultMatchPredicateFn(predicate)) {
+            return predicate(value)
+          }
+
+          if (predicate.isOk()) {
+            return predicate.ok().contains(value)
+          }
+
+          return false
+        },
+      )
+
+      if (!result) {
+        throw new MatchError("Uncaught MatchError: Non-exhaustive patterns")
+      }
+
+      return result[1]
+    }
+
+    throw new MatchError("Uncaught MatchError: No match arms provided")
+  }
+
   return {
     isOk,
     isErr,
@@ -82,5 +114,7 @@ export function Ok<T, E>(value: T): Result<T, E> {
 
     ok,
     err,
+
+    match,
   }
 }

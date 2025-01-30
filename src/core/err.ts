@@ -1,6 +1,9 @@
 import type { Maybe } from "../types/maybe.js"
 import type { Result } from "../types/result.ts"
-import { UnwrapError } from "./UnwrapError.js"
+import type { ResultMatchPredicate } from "../types/shared.js"
+import { isResultMatchPredicateFn } from "../utils/utils.js"
+import { MatchError } from "./errors/MatchError.js"
+import { UnwrapError } from "./errors/UnwrapError.js"
 import { None } from "./none.js"
 import { Some } from "./some.js"
 
@@ -61,6 +64,32 @@ export function Err<T, E>(value: E): Result<T, E> {
     return Some<E>(value)
   }
 
+  function match<U>(args: [ResultMatchPredicate<T, U, E>, U][]): U {
+    if (args !== undefined && args.length > 0) {
+      const result: [ResultMatchPredicate<T, U, E>, U] | undefined = args.find(
+        ([predicate, _]: [ResultMatchPredicate<T, U, E>, U]): boolean => {
+          if (isResultMatchPredicateFn(predicate)) {
+            return predicate(value)
+          }
+
+          if (predicate.isErr()) {
+            return predicate.err().contains(value)
+          }
+
+          return false
+        },
+      )
+
+      if (!result) {
+        throw new MatchError("Uncaught MatchError: Non-exhaustive patterns")
+      }
+
+      return result[1]
+    }
+
+    throw new MatchError("Uncaught MatchError: No match arms provided")
+  }
+
   return {
     isOk,
     isErr,
@@ -84,5 +113,7 @@ export function Err<T, E>(value: E): Result<T, E> {
 
     ok,
     err,
+
+    match,
   }
 }

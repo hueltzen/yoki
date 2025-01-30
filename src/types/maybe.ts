@@ -1,3 +1,5 @@
+import type { MaybeMatchPredicate } from "./shared.js"
+
 /**
  * The Maybe type.
  *
@@ -8,7 +10,7 @@ export type Maybe<T> = {
    *
    * @return {boolean} Returns whether or not a value is present
    */
-  present: () => boolean
+  isSome: () => boolean
   /**
    * Compares the supplied item to the contained value, returns `true` if they
    * match.
@@ -21,15 +23,18 @@ export type Maybe<T> = {
   contains: (item: T) => boolean
 
   /**
-   * Returns the contained value. Throws an {@link UnwrapError} with a generic
-   * message if called on a {@link None}.
+   * Returns the contained value.
+   *
+   * @throws {UnwrapError} with a generic message if called on an {@link None}
    *
    * @return {T} The contained value
    */
   unwrap: () => T
   /**
-   * Returns the contained value. Throws an {@link UnwrapError} with the
-   * supplied custom `message` if called on a {@link None}.
+   * Returns the contained value.
+   *
+   * @throws {UnwrapError} with the supplied custom `message` if called on an
+   * {@link None}
    *
    * @param {string} message - A custom message to be used for the
    * `UnwrapError`
@@ -165,4 +170,18 @@ export type Maybe<T> = {
    * @return {Maybe<R>} The result of the supplied function
    */
   zipWith: <U, R>(other: Maybe<U>, fn: (value1: T, value2: U) => R) => Maybe<R>
+
+  /**
+   * Returns the value associated with the first MaybeMatchPredicate<T, U> to
+   * match the Maybe.
+   *
+   * @throws {MatchError} if no match arms are provided or if no match arm is
+   * matching the Maybe
+   *
+   * @param {MaybeMatchPredicate<T, U>} args - The predicates to match on the
+   * Maybe
+   *
+   * @returns The value associated with the first matching predicate
+   */
+  match: <U>(args: [MaybeMatchPredicate<T, U>, U][]) => U
 }
