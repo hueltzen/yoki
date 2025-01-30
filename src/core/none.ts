@@ -1,8 +1,13 @@
 import type { Maybe } from "../types/maybe.js"
-import { UnwrapError } from "./UnwrapError.js"
+import type { MaybeMatchPredicate } from "../types/shared.js"
+import { isMaybeMatchPredicateFn } from "../utils/utils.js"
+import { MatchError } from "./errors/MatchError.js"
+import { UnwrapError } from "./errors/UnwrapError.js"
 
 export function None<T>(): Maybe<T> {
-  function present(): boolean {
+  const value = undefined
+
+  function isSome(): boolean {
     return false
   }
 
@@ -65,8 +70,30 @@ export function None<T>(): Maybe<T> {
     return None()
   }
 
+  function match<U>(args: [MaybeMatchPredicate<T, U>, U][]): U {
+    if (args !== undefined && args.length > 0) {
+      const result: [MaybeMatchPredicate<T, U>, U] | undefined = args.find(
+        ([predicate, _]: [MaybeMatchPredicate<T, U>, U]): boolean => {
+          if (isMaybeMatchPredicateFn(predicate)) {
+            return predicate()
+          }
+
+          return !predicate.isSome()
+        },
+      )
+
+      if (!result) {
+        throw new MatchError("Uncaught MatchError: Non-exhaustive patterns")
+      }
+
+      return result[1]
+    }
+
+    throw new MatchError("Uncaught MatchError: No match arms provided")
+  }
+
   return {
-    present,
+    isSome,
     contains,
 
     expect,
@@ -87,5 +114,7 @@ export function None<T>(): Maybe<T> {
 
     zip,
     zipWith,
+
+    match,
   }
 }
