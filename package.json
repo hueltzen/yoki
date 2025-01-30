@@ -1,6 +1,6 @@
 {
   "name": "@ueltzen/yoki",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A rust inspired maybe and result library.",
   "keywords": [],
   "homepage": "https://github.com/hueltzen/yoki",
