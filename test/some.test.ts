@@ -3,7 +3,7 @@ import type { Maybe } from "../src/types/maybe.js"
 import { None } from "../src/core/none.js"
 import { Some } from "../src/core/some.js"
 import { UnwrapError } from "../src/core/errors/UnwrapError.js"
-import { _ } from "../src/utils/utils.js"
+import { _, any, range } from "../src/utils/utils.js"
 import { MatchError } from "../src/core/errors/MatchError.js"
 import { Ok } from "../src/core/ok.js"
 
@@ -153,6 +153,12 @@ describe("Some", function () {
       [Some(24), 2],
     ])
     expect(matchedMultipleArmsResult).toBe(2)
+
+    const matchedRangeResult = someNumber.match([[range(20, 25), 4]])
+    expect(matchedRangeResult).toBe(4)
+
+    const matchedAnyResult = someNumber.match([[any([20, 24, 25]), 7]])
+    expect(matchedAnyResult).toBe(7)
 
     const nonExhaustivePatternsError = new MatchError(
       "Uncaught MatchError: Non-exhaustive patterns",

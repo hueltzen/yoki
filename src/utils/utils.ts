@@ -49,3 +49,56 @@ export function isResultMatchPredicateFn<T, U, E>(
 export const _: () => true = function (): true {
   return true
 }
+
+/**
+ * Returns a function that accepts a number value and returns true if that value
+ * is within the range of the supplied lowerLimit and upperLimit.
+ *
+ * @param lowerLimit - The lower limit of the range
+ * @param upperLimit - The upper limit of the range
+ * @param inclusive - An array taking two booleans; the first determines if the
+ * lower limit should be inclusive (meaning mathing on <= instead of <; if set
+ * to true), the first determines if the upper limit should be inclusive.
+ *
+ * @returns A function taking in a number value and returning true if that
+ * value is in the supplied range
+ */
+export function range(
+  lowerLimit: number,
+  upperLimit: number,
+  [lowerInclusive, upperInclusive] = [true, true],
+): (value?: number) => boolean {
+  return function (value?: number): boolean {
+    if (value !== undefined) {
+      const matchesLowerLimit = lowerInclusive
+        ? lowerLimit <= value
+        : lowerLimit < value
+      const matchesUpperLimit = upperInclusive
+        ? upperLimit >= value
+        : upperLimit > value
+
+      return matchesLowerLimit && matchesUpperLimit
+    }
+
+    return false
+  }
+}
+
+/**
+ * Returns a function that accepts a value of type T and returns true if that
+ * value is included in the supplied values array.
+ *
+ * @param values - The accepted values
+ *
+ * @returns A function taking in a value of type T and returning true if that
+ * value is in the supplied array
+ */
+export function any<T>(values: T[]): (value?: T) => boolean {
+  return function (value?: T): boolean {
+    if (value !== undefined) {
+      return values.includes(value)
+    }
+
+    return false
+  }
+}
